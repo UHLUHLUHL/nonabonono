@@ -895,14 +895,21 @@ textarea::placeholder {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Smart Actions UI (Cell Division - Seamless Split) */
+/* Smart Actions UI (Liquid Gooey Effect) */
 .smart-actions-wrapper {
     position: absolute;
-    right: 130px;
-    bottom: 0;
-    width: 50px;
-    height: 50px;
+    right: 120px;
+    bottom: -10px;
+    width: 100px;
+    height: 120px;
     z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* Apply the Gooey Filter */
+    filter: url('#goo');
+    /* Optimize rendering */
+    -webkit-filter: url('#goo');
 }
 
 /* Main Trigger */
@@ -910,47 +917,41 @@ textarea::placeholder {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(26, 30, 38, 0.9);
-    border: 1px solid rgba(168, 199, 250, 0.3);
-    color: var(--accent);
+    background: var(--accent);
+    /* Solid color needed for goo */
+    color: var(--bg-primary);
+    border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 20px;
+    /* Center in wrapper horizontally */
     z-index: 5;
-    box-shadow: 0 0 15px rgba(168, 199, 250, 0.1);
-    transition: all 0.15s ease-out;
+    transition: all 0.3s ease;
 }
 
-/* Trigger stretches then fades */
 .smart-actions-wrapper:hover .smart-trigger-btn {
-    opacity: 0;
-    transform: scaleX(2) scaleY(0.5);
+    transform: scale(0.8);
 }
 
-/* Menu Container - expands on hover to catch mouse */
+/* Menu Container */
 .smart-actions-menu {
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 40px;
     height: 40px;
     pointer-events: none;
-    transition: all 0.15s;
 }
 
 .smart-actions-wrapper:hover .smart-actions-menu {
     pointer-events: auto;
-    width: 100px;
-    height: 80px;
-    left: -25px;
-    bottom: -5px;
 }
 
-/* Cell Buttons - Start as stretched ellipses at center */
+/* Cell Buttons - Start at center (behind trigger) */
 .cell-btn {
     position: absolute;
     bottom: 0;
@@ -958,82 +959,70 @@ textarea::placeholder {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 1px solid rgba(168, 199, 250, 0.5);
-    background: rgba(26, 30, 38, 0.95);
-    color: var(--text-primary);
+    background: var(--accent);
+    /* Same color for liquid connection */
+    color: var(--bg-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    opacity: 0;
-    box-shadow: 0 0 20px rgba(168, 199, 250, 0.2);
-    backdrop-filter: blur(8px);
-}
-
-/* Initial state: stretched horizontally, overlapping at center */
-.optimize-btn {
-    transform: scaleX(0.6) scaleY(1) translate(10px, 0);
-    transform-origin: right center;
-}
-
-.analyze-btn {
-    transform: scaleX(0.6) scaleY(1) translate(-10px, 0);
-    transform-origin: left center;
-}
-
-/* Split animation - fast and elastic */
-.smart-actions-wrapper:hover .optimize-btn {
     opacity: 1;
-    animation: split-left 0.25s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    /* Always visible but hidden behind trigger */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Initial state: stacked behind trigger */
+.optimize-btn,
+.analyze-btn {
+    transform: translate(0, 0);
+}
+
+/* Hover: Move apart (Filter creates liquid strand) */
+.smart-actions-wrapper:hover .optimize-btn {
+    transform: translate(-30px, -50px);
 }
 
 .smart-actions-wrapper:hover .analyze-btn {
-    opacity: 1;
-    animation: split-right 0.25s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    transform: translate(30px, -50px);
 }
 
-/* Left split: stretch -> move -> round */
-@keyframes split-left {
-    0% {
-        transform: scaleX(0.6) translate(10px, 0);
-        border-radius: 40% 50% 50% 40%;
-    }
-
-    50% {
-        transform: scaleX(0.85) translate(-12px, -20px);
-        border-radius: 45% 50% 50% 45%;
-    }
-
-    100% {
-        transform: scale(1) translate(-25px, -40px);
-        border-radius: 50%;
-    }
+/* Tooltips (restore styling broken by filter) */
+.cell-btn::after {
+    display: none;
+    /* Tooltips don't work well inside goo filter */
 }
 
-/* Right split: stretch -> move -> round */
-@keyframes split-right {
-    0% {
-        transform: scaleX(0.6) translate(-10px, 0);
-        border-radius: 50% 40% 40% 50%;
-    }
-
-    50% {
-        transform: scaleX(0.85) translate(12px, -20px);
-        border-radius: 50% 45% 45% 50%;
-    }
-
-    100% {
-        transform: scale(1) translate(25px, -40px);
-        border-radius: 50%;
-    }
+/* Solution: Tooltips on wrapper hover, positioned absolutely relative to wrapper */
+.optimize-btn:hover::before {
+    content: "Magic";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1e26;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
 }
 
-/* Hover state for buttons */
-.cell-btn:hover {
-    background: var(--accent);
-    color: var(--bg-primary);
-    box-shadow: 0 0 35px rgba(168, 199, 250, 0.7);
-    border-color: #fff;
+.analyze-btn:hover::before {
+    content: "Analyze";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1e26;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
 }
 
 /* Tooltips - High visibility */
