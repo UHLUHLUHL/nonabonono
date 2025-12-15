@@ -1,3 +1,4 @@
+const APP_VERSION = 'v1.2.0 (Rev. RefImage)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -45,6 +46,22 @@ const studioHomeView = document.getElementById('studioHomeView');
 const inputWrapper = document.querySelector('.input-area-wrapper');
 
 
+
+// Version Display
+const versionDisplay = document.createElement('div');
+versionDisplay.className = 'version-display';
+versionDisplay.textContent = APP_VERSION;
+versionDisplay.style.cssText = `
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 9999;
+`;
+document.body.appendChild(versionDisplay);
 
 // Login/Logout Logic for Settings Modal
 if (document.getElementById('settingsLoginBtn')) {
