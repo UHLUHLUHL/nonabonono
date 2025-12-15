@@ -326,6 +326,91 @@ function initSettings() {
         });
     }
 
+    // Ref Image UI Elements
+    const refImageInput = document.getElementById('refImageInput');
+    const uploadTriggerBtn = document.getElementById('uploadTriggerBtn');
+    const refImagePreviewContainer = document.getElementById('refImagePreviewContainer');
+    const refImagePreview = document.getElementById('refImagePreview');
+    const removeRefImageBtn = document.getElementById('removeRefImageBtn');
+
+    // Helper: Process File
+    const processImageFile = (file) => {
+        if (!file) return;
+
+        const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            alert('지원되지 않는 파일 형식입니다. (JPEG, PNG, WEBP만 가능)');
+            return;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+            alert('파일 크기는 4MB를 초과할 수 없습니다.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (re) => {
+            const base64Data = re.target.result.split(',')[1];
+            currentReferenceImage = {
+                mimeType: file.type,
+                data: base64Data
+            };
+            refImagePreview.src = re.target.result;
+            refImagePreviewContainer.style.display = 'inline-block';
+            refImageInput.value = ''; // Reset input
+        };
+        reader.readAsDataURL(file);
+    };
+
+    // Ref Image Listeners
+    if (uploadTriggerBtn && refImageInput) {
+        uploadTriggerBtn.addEventListener('click', () => refImageInput.click());
+
+        refImageInput.addEventListener('change', (e) => {
+            processImageFile(e.target.files[0]);
+        });
+    }
+
+    if (removeRefImageBtn) {
+        removeRefImageBtn.addEventListener('click', () => {
+            currentReferenceImage = null;
+            refImagePreview.src = '';
+            refImagePreviewContainer.style.display = 'none';
+            if (refImageInput) refImageInput.value = '';
+        });
+    }
+
+    // Drag & Drop Logic
+    const promptBox = document.getElementById('promptBox');
+    if (promptBox) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            promptBox.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        promptBox.addEventListener('dragenter', () => promptBox.classList.add('drag-over'));
+        promptBox.addEventListener('dragover', () => promptBox.classList.add('drag-over'));
+
+        promptBox.addEventListener('dragleave', (e) => {
+            // Only remove if leaving the box entirely, not entering a child
+            if (!promptBox.contains(e.relatedTarget)) {
+                promptBox.classList.remove('drag-over');
+            }
+        });
+
+        promptBox.addEventListener('drop', (e) => {
+            promptBox.classList.remove('drag-over');
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                processImageFile(files[0]);
+            }
+        });
+    }
+
     // Force Sync
     const forceSyncBtn = document.getElementById('forceSyncBtn');
     if (forceSyncBtn) {

@@ -131,18 +131,9 @@
             <!-- Input Area -->
             <div class="input-area-wrapper">
                 <div class="input-container">
+                    <input type="file" id="refImageInput" accept="image/jpeg, image/png, image/webp"
+                        style="display: none;">
                     <div class="input-controls">
-                        <!-- Image Upload Trigger -->
-                        <div class="image-upload-wrapper">
-                            <input type="file" id="refImageInput" accept="image/jpeg, image/png, image/webp"
-                                style="display: none;">
-                            <button id="uploadTriggerBtn" class="control-btn" title="참조 이미지 업로드">
-                                <span class="material-symbols-rounded">add_photo_alternate</span>
-                            </button>
-                        </div>
-
-                        <div class="divider"></div>
-
                         <!-- Aspect Ratio Selector -->
                         <div class="ratio-selector">
                             <label>이미지 수</label>
@@ -191,41 +182,52 @@
                         <div class="ref-badge">참조 이미지</div>
                     </div>
 
-                    <div class="prompt-box">
+                    <div class="prompt-box" id="promptBox">
                         <textarea id="promptInput" placeholder="무엇을 그리고 싶으신가요? (예: 사이버펑크 도시 ratio=16:9)"></textarea>
+
+                        <!-- Upload Button (Inside Right) -->
+                        <button id="uploadTriggerBtn" class="upload-btn-inside" title="이미지 첨부 (Drag & Drop 가능)">
+                            <span class="material-symbols-rounded">add_photo_alternate</span>
+                        </button>
+
                         <button id="generateBtn" class="generate-btn">
                             <span class="material-symbols-rounded">auto_awesome</span>
                             생성
                         </button>
 
-                        <!-- Smart Actions (Cell Division UI) -->
-                        <div class="smart-actions-wrapper">
-                            <!-- Main Trigger (Wand) -->
-                            <button class="smart-trigger-btn">
+                        <!-- Drop Zone Overlay -->
+                        <div id="dropOverlay" class="drop-overlay">
+                            <span class="material-symbols-rounded">cloud_upload</span>
+                            <p>이미지를 여기에 놓으세요</p>
+                        </div>
+                    </div> <!-- Smart Actions (Cell Division UI) -->
+                    <div class="smart-actions-wrapper">
+                        <!-- Main Trigger (Wand) -->
+                        <button class="smart-trigger-btn">
+                            <span class="material-symbols-rounded">auto_fix_high</span>
+                        </button>
+
+                        <!-- Spawning Buttons -->
+                        <div class="smart-actions-menu">
+                            <!-- 1. Optimization (Magic) -->
+                            <button id="btn-optimize" class="cell-btn optimize-btn" title="프롬프트 매직 최적화">
                                 <span class="material-symbols-rounded">auto_fix_high</span>
                             </button>
-
-                            <!-- Spawning Buttons -->
-                            <div class="smart-actions-menu">
-                                <!-- 1. Optimization (Magic) -->
-                                <button id="btn-optimize" class="cell-btn optimize-btn" title="프롬프트 매직 최적화">
-                                    <span class="material-symbols-rounded">auto_fix_high</span>
-                                </button>
-                                <!-- 2. Analysis (Tags) -->
-                                <button id="btn-analyze" class="cell-btn analyze-btn" title="키워드 분석">
-                                    <span class="material-symbols-rounded">manage_search</span>
-                                </button>
-                            </div>
+                            <!-- 2. Analysis (Tags) -->
+                            <button id="btn-analyze" class="cell-btn analyze-btn" title="키워드 분석">
+                                <span class="material-symbols-rounded">manage_search</span>
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Smart Tag Container -->
-                    <div id="smartTagContainer" class="smart-tag-container" style="display:none;">
-                        <!-- Tags will be injected here -->
-                    </div>
+                <!-- Smart Tag Container -->
+                <div id="smartTagContainer" class="smart-tag-container" style="display:none;">
+                    <!-- Tags will be injected here -->
                 </div>
             </div>
-        </main>
+    </div>
+    </main>
     </div>
 
     <!-- Settings Modal -->

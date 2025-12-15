@@ -647,52 +647,144 @@ body {
     cursor: pointer;
 }
 
+/* Prompt Box Area */
 .prompt-box {
+    position: relative;
+    background: rgba(18, 20, 24, 0.4);
+    border: 1px solid rgba(168, 199, 250, 0.1);
+    border-radius: 16px;
+    padding: 10px 100px 10px 14px;
+    /* Right padding for buttons */
     display: flex;
-    gap: 16px;
-    align-items: flex-end;
+    align-items: center;
+    transition: all 0.3s;
+    min-height: 52px;
 }
 
-textarea {
-    flex: 1;
+.prompt-box:focus-within {
+    border-color: rgba(168, 199, 250, 0.3);
+    background: rgba(18, 20, 24, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.prompt-box.drag-over {
+    border: 2px dashed var(--accent);
+    background: rgba(168, 199, 250, 0.1);
+}
+
+.prompt-box textarea {
+    width: 100%;
     background: transparent;
     border: none;
     color: var(--text-primary);
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
     resize: none;
-    min-height: 24px;
-    max-height: 120px;
-    padding: 8px 0;
     outline: none;
+    height: 24px;
+    max-height: 120px;
+    line-height: 24px;
+    font-family: 'Inter', sans-serif;
 }
 
 textarea::placeholder {
     color: var(--text-secondary);
 }
 
-.generate-btn {
-    background: var(--text-primary);
-    color: var(--bg-primary);
+/* Upload Button Inside (Right) */
+.upload-btn-inside {
+    position: absolute;
+    right: 96px;
+    /* Position left of generate button */
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
     border: none;
-    padding: 10px 20px;
-    border-radius: 100px;
-    font-weight: 600;
-    font-family: inherit;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+}
+
+.upload-btn-inside:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(168, 199, 250, 0.2);
+}
+
+/* Generate Button */
+.generate-btn {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    bottom: 6px;
+    border: none;
+    border-radius: 10px;
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: 600;
+    padding: 0 16px;
     cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .generate-btn:hover {
-    opacity: 0.9;
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 .generate-btn:active {
     transform: scale(0.96);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Drop Overlay */
+.drop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(19, 22, 28, 0.85);
+    border-radius: 16px;
+    display: flex;
+    /* Flex but hidden via opacity/pointer-events */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    gap: 8px;
+}
+
+.prompt-box.drag-over .drop-overlay {
+    opacity: 1;
+}
+
+.drop-overlay span {
+    font-size: 32px;
+    color: var(--accent);
+}
+
+.drop-overlay p {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
 }
 
 /* Scrollbar */
@@ -917,9 +1009,8 @@ textarea::placeholder {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--accent);
-    /* Solid color needed for goo */
-    color: var(--bg-primary);
+    /* Radial Gradient: Bright center, transparent edges */
+    background: radial-gradient(circle, rgba(168, 199, 250, 1) 20%, rgba(168, 199, 250, 0.1) 70%, transparent 100%);
     border: none;
     cursor: pointer;
     display: flex;
@@ -929,11 +1020,17 @@ textarea::placeholder {
     bottom: 20px;
     /* Center in wrapper horizontally */
     z-index: 5;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.1s ease;
+    /* Fast opacity */
+    box-shadow: 0 0 15px rgba(168, 199, 250, 0.3);
+    /* Base glow */
 }
 
+/* Trigger Disappears Instantly on Split */
 .smart-actions-wrapper:hover .smart-trigger-btn {
-    transform: scale(0.8);
+    opacity: 0;
+    transform: scale(0.5);
+    transition-delay: 0s;
 }
 
 /* Menu Container */
