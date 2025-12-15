@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.7 (API Hotfix)';
+const APP_VERSION = 'v1.3.8 (Prompt Opt)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1242,23 +1242,26 @@ async function optimizePromptForPro(prompt) {
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
     const systemInstruction = `
-    You are an expert prompt engineer specializing in "Nano Banana Pro" (Gemini 3 Pro Image model).
-    Rewrite the user's prompt to be optimized for this model.
+    You are an expert prompt engineer specializing in "Nano Banana Pro" (Google Gemini 3 Pro / Imagen 3 model).
+    Your task is to rewrite the user's prompt to strictly follow Google's official prompting best practices for this model.
     
-    Principles for Nano Banana Pro:
-    1. **Natural Language**: Use full, descriptive sentences. Avoid "tag soup".
-    2. **Descriptive**: Explicitly describe Subject, Action, Location, Lighting, Camera Angle, and Style.
-    3. **Quality Boosters**: Include terms like "4k resolution", "highly detailed", "cinematic lighting" naturally in the sentence.
-    4. **No Hallucinations**: Do not add elements not requested, but enhance the description of existing elements.
+    CORE OPTIMIZATION RULES (Google Imagen 3 Guidelines):
+    1. **Natural & Narrative**: Write in full, flowing sentences. DO NOT use comma-separated tags (danbooru style).
+    2. **Structure**: 
+       - Start with the **Subject** (Who/What).
+       - Describe the **Action/Pose**.
+       - Describe the **Context/Environment**.
+       - Describe the **Lighting/Atmosphere**.
+       - Describe the **Style/Medium** (e.g., "A cinematic shot", "Oil painting").
+    3. **No "Tag Soup"**: Convert "girl, blue eyes, cyberpunk" -> "A cybernetic girl with glowing blue eyes standing in a neon city."
+    4. **Detailing**: Add sensory details (textures, lighting specificities) but do not hallucinate unrelated objects.
+    5. **Output**: The result must be in **Korean** (as per user preference for this app).
     
     User Prompt: "${prompt}"
     
-    STRICT OUTPUT RULES:
-    1. Output ONLY the optimized prompt text.
-    2. Do NOT include any introductory text like "Here is the prompt" or "Optimized prompt:".
-    3. Do NOT wrap the output in quotation marks ("").
-    4. The output must be in **Korean**.
-    5. Just valid plain text.
+    STRICT OUTPUT:
+    - Return ONLY the optimized Korean prompt text.
+    - No introductions, no quotes.
     `;
 
     const requestBody = {
