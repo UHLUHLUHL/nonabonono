@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.6 (API Fix)';
+const APP_VERSION = 'v1.3.7 (API Hotfix)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1909,9 +1909,7 @@ async function generateSingleImage(prompt, aspectRatio = null) {
         temperature: 0.9
     };
 
-    if (aspectRatio) {
-        generationConfig.aspect_ratio = aspectRatio;
-    }
+    // generationConfig.aspect_ratio = aspectRatio; // API does not support this field yet
 
     const requestBody = {
         contents: [{
