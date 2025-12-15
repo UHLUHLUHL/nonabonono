@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.2 (Clean UI)';
+const APP_VERSION = 'v1.3.3 (Download All)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1328,6 +1328,76 @@ async function analyzePromptEntities(prompt) {
         }
     }
     throw new Error('No content in response');
+}
+
+// --- Download All (Zip) ---
+if (downloadAllBtn) {
+    downloadAllBtn.addEventListener('click', async () => {
+        const images = document.querySelectorAll('#imageGrid img');
+        if (images.length === 0) {
+            alert('저장할 이미지가 없습니다.');
+            return;
+        }
+
+        const zip = new JSZip();
+        const folder = zip.folder("nanobanana_images");
+        let count = 0;
+
+        const originalText = downloadAllBtn.innerHTML;
+        downloadAllBtn.textContent = '압축 중...';
+        downloadAllBtn.disabled = true;
+
+        try {
+            // Determine source: URL or Base64
+            const fetchPromises = Array.from(images).map(async (img, index) => {
+                const src = img.src;
+                let blob = null;
+
+                if (src.startsWith('data:')) {
+                    // Base64
+                    blob = await (await fetch(src)).blob();
+                } else {
+                    // URL
+                    try {
+                        const response = await fetch(src);
+                        blob = await response.blob();
+                    } catch (e) {
+                        console.error("Failed to fetch image:", src, e);
+                        return; // Skip failed
+                    }
+                }
+
+                if (blob) {
+                    const filename = `image_${Date.now()}_${index + 1}.png`;
+                    folder.file(filename, blob);
+                    count++;
+                }
+            });
+
+            await Promise.all(fetchPromises);
+
+            if (count > 0) {
+                const content = await zip.generateAsync({ type: "blob" });
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `nanobanana_batch_${Date.now()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                alert('저장할 수 있는 이미지가 없습니다.');
+            }
+
+        } catch (err) {
+            console.error("Zip Error:", err);
+            alert('이미지 압축 중 오류가 발생했습니다.');
+        } finally {
+            downloadAllBtn.innerHTML = originalText;
+            downloadAllBtn.disabled = false;
+        }
+    });
 }
 
 // --- Auto Translation (Feature 2) ---
