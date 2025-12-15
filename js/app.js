@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.5 (Res & Key Fix)';
+const APP_VERSION = 'v1.3.6 (API Fix)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1910,7 +1910,7 @@ async function generateSingleImage(prompt, aspectRatio = null) {
     };
 
     if (aspectRatio) {
-        generationConfig.aspectRatio = aspectRatio;
+        generationConfig.aspect_ratio = aspectRatio;
     }
 
     const requestBody = {
