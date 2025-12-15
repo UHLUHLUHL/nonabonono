@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.8 (Prompt Opt)';
+const APP_VERSION = 'v1.3.9 (Gemini 3 Pro Opt)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1242,19 +1242,18 @@ async function optimizePromptForPro(prompt) {
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${TEXT_MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
     const systemInstruction = `
-    You are an expert prompt engineer specializing in "Nano Banana Pro" (Google Gemini 3 Pro / Imagen 3 model).
-    Your task is to rewrite the user's prompt to strictly follow Google's official prompting best practices for this model.
+    You are an expert prompt engineer specializing in "Nano Banana Pro" (Google Gemini 3 Pro Image model).
+    Your task is to rewrite the user's prompt to be fully optimized for this model's capabilities.
     
-    CORE OPTIMIZATION RULES (Google Imagen 3 Guidelines):
-    1. **Natural & Narrative**: Write in full, flowing sentences. DO NOT use comma-separated tags (danbooru style).
-    2. **Structure**: 
-       - Start with the **Subject** (Who/What).
-       - Describe the **Action/Pose**.
-       - Describe the **Context/Environment**.
-       - Describe the **Lighting/Atmosphere**.
-       - Describe the **Style/Medium** (e.g., "A cinematic shot", "Oil painting").
-    3. **No "Tag Soup"**: Convert "girl, blue eyes, cyberpunk" -> "A cybernetic girl with glowing blue eyes standing in a neon city."
-    4. **Detailing**: Add sensory details (textures, lighting specificities) but do not hallucinate unrelated objects.
+    CORE OPTIMIZATION RULES (Gemini 3 Pro Guidelines):
+    1. **Complex & Descriptive**: This model excels at understanding complex, multi-layered instructions. Do not simply list keywords. Write a cohesive narrative.
+    2. **Structure**:
+       - **Headline**: A powerful opening sentence describing the core subject and action.
+       - **Details**: Elaborate on outfit, textures, and physical features.
+       - **Environment**: Describe the setting, lighting, and atmosphere in detail.
+       - **Style**: Specify the artistic medium (e.g., "Cinematic 4k shot", "Digital Art", "Oil Painting") clearly.
+    3. **No "Tag Soup"**: AVOID: "girl, blue eyes, beach". USE: "A young woman with piercing blue eyes stands on a sunlit beach..."
+    4. **Lighting & Mood**: Explicitly describe the lighting (e.g., "volumetric lighting", "soft sunset glow") to enhance realism.
     5. **Output**: The result must be in **Korean** (as per user preference for this app).
     
     User Prompt: "${prompt}"
