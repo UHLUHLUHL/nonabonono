@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.4 (Ref Prompt Fix)';
+const APP_VERSION = 'v1.3.5 (Res & Key Fix)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -721,7 +721,6 @@ imageGrid.addEventListener('click', (e) => {
 
 
 generateBtn.addEventListener('click', handleGeneration);
-downloadAllBtn.addEventListener('click', downloadAllImages);
 
 // Auto-resize textarea & Enter key handling
 promptInput.addEventListener('input', function () {
@@ -1036,10 +1035,7 @@ function downloadImage(url, filename, e) {
     document.body.removeChild(a);
 }
 
-function downloadAllImages() {
-    alert("웹 버전에서는 'Settings > Data Management > Export' 기능을 사용하여 전체 데이터를 백업/다운로드하세요.");
-    if (settingsBtn) settingsBtn.click();
-}
+
 
 function createResultCard(imageUrl, prompt) {
     const card = document.createElement('div');
@@ -1735,14 +1731,16 @@ function updatePromptEntity(oldText, newText) {
 
 // Prompt and Settings Processor
 function processPromptAndSettings(promptText, quality) {
-    // 1. Detect Ratio for UI Preview (CSS)
+    // 1. Detect Ratio for UI Preview (CSS) & API
     const ratioRegex = /ratio=(\d+):(\d+)/i;
     const match = promptText.match(ratioRegex);
 
     let cssAspectRatio = '1/1'; // Default square
+    let apiAspectRatio = '1:1'; // Default square for API
 
     if (match) {
         cssAspectRatio = `${match[1]}/${match[2]}`;
+        apiAspectRatio = `${match[1]}:${match[2]}`; // Keep as X:Y for API
     }
 
     // 2. Enhance Prompt based on Quality
@@ -1762,7 +1760,8 @@ function processPromptAndSettings(promptText, quality) {
 
     return {
         finalPrompt: finalPrompt,
-        cssAspectRatio: cssAspectRatio
+        cssAspectRatio: cssAspectRatio,
+        apiAspectRatio: apiAspectRatio
     };
 }
 
@@ -1845,7 +1844,7 @@ async function handleGeneration() {
 
     // Create promises that process their own execution AND UI update immediately
     const promises = Array(currentImageCount).fill(null).map((_, index) => {
-        return generateSingleImage(finalPrompt).then(result => {
+        return generateSingleImage(finalPrompt, cssAspectRatio.replace('/', ':')).then(result => {
             // Immediately update this specific slot
             if (result && result.success) {
                 const newCard = createResultCard(result.url, rawPrompt);
@@ -1889,7 +1888,7 @@ async function handleGeneration() {
     }
 }
 
-async function generateSingleImage(prompt) {
+async function generateSingleImage(prompt, aspectRatio = null) {
     trackApiUsage(); // Track Request
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
@@ -1906,13 +1905,19 @@ async function generateSingleImage(prompt) {
         });
     }
 
+    const generationConfig = {
+        temperature: 0.9
+    };
+
+    if (aspectRatio) {
+        generationConfig.aspectRatio = aspectRatio;
+    }
+
     const requestBody = {
         contents: [{
             parts: parts
         }],
-        generationConfig: {
-            temperature: 0.9,
-        }
+        generationConfig: generationConfig
     };
 
     try {
