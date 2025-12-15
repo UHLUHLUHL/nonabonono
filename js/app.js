@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.3 (Download All)';
+const APP_VERSION = 'v1.3.4 (Ref Prompt Fix)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1118,16 +1118,23 @@ async function generateSingleImageWithVariation(prompt) {
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
     // Construct Payload
-    const parts = [{ text: prompt }];
+    let finalPrompt = prompt;
+    const parts = [];
 
     // Add Reference Image if exists
     if (currentReferenceImage && currentReferenceImage.data) {
+        // Prepend specific instruction to use the image
+        finalPrompt = `(Follow the character design, outfit, and facial features of the attached reference image exactly): ${prompt}`;
+
+        parts.push({ text: finalPrompt });
         parts.push({
             inline_data: {
                 mime_type: currentReferenceImage.mimeType,
                 data: currentReferenceImage.data
             }
         });
+    } else {
+        parts.push({ text: finalPrompt });
     }
 
     const requestBody = {
