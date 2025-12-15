@@ -161,6 +161,13 @@
                                 <span class="toggle-label">ON</span>
                             </button>
                         </div>
+                        <!-- Magic Button (Same style as toggle) -->
+                        <div class="control-group">
+                            <button id="btn-optimize" class="toggle-btn" title="프롬프트 매직 최적화">
+                                <span class="material-symbols-rounded" style="font-size:16px;">auto_fix_high</span>
+                                <span class="toggle-label">Magic</span>
+                            </button>
+                        </div>
                         <!-- Spacer -->
                         <div style="flex:1;"></div>
                         <!-- Actions Trigger Group -->
@@ -200,34 +207,14 @@
                             <span class="material-symbols-rounded">cloud_upload</span>
                             <p>이미지를 여기에 놓으세요</p>
                         </div>
-                    </div> <!-- Smart Actions (Cell Division UI) -->
-                    <div class="smart-actions-wrapper">
-                        <!-- Main Trigger (Wand) -->
-                        <button class="smart-trigger-btn">
-                            <span class="material-symbols-rounded">auto_fix_high</span>
-                        </button>
-
-                        <!-- Spawning Buttons -->
-                        <div class="smart-actions-menu">
-                            <!-- 1. Optimization (Magic) -->
-                            <button id="btn-optimize" class="cell-btn optimize-btn" title="프롬프트 매직 최적화">
-                                <span class="material-symbols-rounded">auto_fix_high</span>
-                            </button>
-                            <!-- 2. Analysis (Tags) -->
-                            <button id="btn-analyze" class="cell-btn analyze-btn" title="키워드 분석">
-                                <span class="material-symbols-rounded">manage_search</span>
-                            </button>
-                        </div>
+                    </div>
+                    <!-- Smart Tag Container -->
+                    <div id="smartTagContainer" class="smart-tag-container" style="display:none;">
+                        <!-- Tags will be injected here -->
                     </div>
                 </div>
-
-                <!-- Smart Tag Container -->
-                <div id="smartTagContainer" class="smart-tag-container" style="display:none;">
-                    <!-- Tags will be injected here -->
-                </div>
             </div>
-    </div>
-    </main>
+        </main>
     </div>
 
     <!-- Settings Modal -->

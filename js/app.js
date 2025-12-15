@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.1 (UI Fix)';
+const APP_VERSION = 'v1.3.2 (Clean UI)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
