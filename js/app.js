@@ -1015,12 +1015,25 @@ async function generateSingleImageWithVariation(prompt) {
     trackApiUsage();
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
+    // Construct Payload
+    const parts = [{ text: prompt }];
+
+    // Add Reference Image if exists
+    if (currentReferenceImage && currentReferenceImage.data) {
+        parts.push({
+            inline_data: {
+                mime_type: currentReferenceImage.mimeType,
+                data: currentReferenceImage.data
+            }
+        });
+    }
+
     const requestBody = {
         contents: [{
-            parts: [{ text: prompt }]
+            parts: parts
         }],
         generationConfig: {
-            temperature: 1.2, // Higher for more variation
+            temperature: 0.9,
         }
     };
 
@@ -1701,9 +1714,22 @@ async function generateSingleImage(prompt) {
     trackApiUsage(); // Track Request
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${currentApiKey}`;
 
+    // Construct Payload
+    const parts = [{ text: prompt }];
+
+    // Add Reference Image if exists
+    if (currentReferenceImage && currentReferenceImage.data) {
+        parts.push({
+            inline_data: {
+                mime_type: currentReferenceImage.mimeType,
+                data: currentReferenceImage.data
+            }
+        });
+    }
+
     const requestBody = {
         contents: [{
-            parts: [{ text: prompt }]
+            parts: parts
         }],
         generationConfig: {
             temperature: 0.9,

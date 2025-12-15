@@ -132,8 +132,19 @@
             <div class="input-area-wrapper">
                 <div class="input-container">
                     <div class="input-controls">
-                        <!-- Image Count Selector -->
-                        <div class="control-group">
+                        <!-- Image Upload Trigger -->
+                        <div class="image-upload-wrapper">
+                            <input type="file" id="refImageInput" accept="image/jpeg, image/png, image/webp"
+                                style="display: none;">
+                            <button id="uploadTriggerBtn" class="control-btn" title="참조 이미지 업로드">
+                                <span class="material-symbols-rounded">add_photo_alternate</span>
+                            </button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- Aspect Ratio Selector -->
+                        <div class="ratio-selector">
                             <label>이미지 수</label>
                             <div class="count-group">
                                 <button class="count-btn active" data-count="1">1</button>
@@ -169,6 +180,15 @@
                                 전체 저장
                             </button>
                         </div>
+                    </div>
+
+                    <!-- Reference Image Preview (Hidden by default) -->
+                    <div id="refImagePreviewContainer" class="ref-image-preview" style="display: none;">
+                        <img id="refImagePreview" src="" alt="Reference" />
+                        <button id="removeRefImageBtn" class="remove-ref-btn">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                        <div class="ref-badge">참조 이미지</div>
                     </div>
 
                     <div class="prompt-box">
