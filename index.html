@@ -161,12 +161,19 @@
                                 <span class="toggle-label">ON</span>
                             </button>
                         </div>
-                        <!-- Magic Button (Same style as toggle) -->
+                        <!-- Magic Tools -->
                         <div class="control-group">
-                            <button id="btn-optimize" class="toggle-btn" title="프롬프트 매직 최적화">
-                                <span class="material-symbols-rounded" style="font-size:16px;">auto_fix_high</span>
-                                <span class="toggle-label">Magic</span>
-                            </button>
+                            <label>Magic</label>
+                            <div style="display:flex; gap:6px;">
+                                <button id="btn-optimize" class="toggle-btn" title="프롬프트 최적화 (Rewrite)"
+                                    style="width:auto; padding:0 8px;">
+                                    <span class="material-symbols-rounded" style="font-size:16px;">auto_fix_high</span>
+                                </button>
+                                <button id="btn-analyze" class="toggle-btn" title="키워드 분석 (Analyze)"
+                                    style="width:auto; padding:0 8px;">
+                                    <span class="material-symbols-rounded" style="font-size:16px;">manage_search</span>
+                                </button>
+                            </div>
                         </div>
                         <!-- Spacer -->
                         <div style="flex:1;"></div>
