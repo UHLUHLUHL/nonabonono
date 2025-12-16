@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.10 (Fix Ref Error)';
+const APP_VERSION = 'v1.3.11 (Restored Analysis)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1183,9 +1183,23 @@ if (optimizeBtn) {
         const originalContent = optimizeBtn.innerHTML;
         optimizeBtn.innerHTML = '<div class="spinner" style="width:14px;height:14px;"></div>';
 
-        try {
-            const optimized = await optimizePromptForPro(prompt);
+        // UI for Smart Tags (Analysis)
+        smartTagContainer.style.display = 'flex';
+        smartTagContainer.innerHTML = `
+            <div class="smart-tag-loading">
+                <div class="spinner"></div>
+                <span>Analyzing prompt...</span>
+            </div>
+        `;
 
+        try {
+            // Run Optimization and Analysis in Parallel
+            const [optimized, analysisResult] = await Promise.all([
+                optimizePromptForPro(prompt),
+                analyzePromptEntities(prompt)
+            ]);
+
+            // 1. Handle Optimization Result
             promptInput.style.transition = 'color 0.2s';
             promptInput.style.color = 'transparent';
 
@@ -1199,42 +1213,20 @@ if (optimizeBtn) {
                 setTimeout(() => promptInput.classList.remove('flash-success'), 500);
             }, 200);
 
+            // 2. Handle Analysis Result
+            renderSmartTags(analysisResult);
+
         } catch (e) {
-            console.error("Optimization failed", e);
-            alert("최적화 실패");
+            console.error("Optimization or Analysis failed", e);
+            alert("최적화 또는 분석 실패: " + e.message);
+            smartTagContainer.innerHTML = `<span style="color:#ff6b6b; font-size:0.8rem;">Analysis failed</span>`;
         } finally {
             optimizeBtn.innerHTML = originalContent;
         }
     });
 }
 
-// --- Smart Prompt Logic (Analysis) ---
-const analyzeBtn = document.getElementById('btn-analyze');
-if (analyzeBtn) {
-    analyzeBtn.addEventListener('click', async () => {
-        const prompt = promptInput.value.trim();
-        if (!prompt) return;
 
-        smartTagContainer.style.display = 'flex';
-        smartTagContainer.innerHTML = `
-            <div class="smart-tag-loading">
-                <div class="spinner"></div>
-                <span>Analyzing prompt...</span>
-            </div>
-        `;
-
-        try {
-            const result = await analyzePromptEntities(prompt);
-            renderSmartTags(result);
-        } catch (e) {
-            console.error("Analysis failed", e);
-            smartTagContainer.innerHTML = `<span style="color:#ff6b6b; font-size:0.8rem;">Analysis failed</span>`;
-            setTimeout(() => {
-                smartTagContainer.style.display = 'none';
-            }, 3000);
-        }
-    });
-}
 
 // Legacy placeholder
 function initSmartPrompt() { }
