@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.12 (Dual Magic)';
+const APP_VERSION = 'v1.3.13 (503 Handler)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -1938,6 +1938,14 @@ async function generateSingleImage(prompt, aspectRatio = null) {
             },
             body: JSON.stringify(requestBody)
         });
+
+        if (!response.ok) {
+            if (response.status === 503) {
+                throw new Error('Server Busy (503): Traffic overload. Please try again in a moment.');
+            }
+            const errorText = await response.text();
+            throw new Error(`API Error (${response.status}): ${errorText}`);
+        }
 
         const data = await response.json();
 
