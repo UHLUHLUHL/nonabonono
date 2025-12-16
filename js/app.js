@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1.3.9 (Gemini 3 Pro Opt)';
+const APP_VERSION = 'v1.3.10 (Fix Ref Error)';
 const MODEL_NAME = 'gemini-3-pro-image-preview';
 const TEXT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-09-2025';
 // API Key is now strictly dynamic from user usage
@@ -130,6 +130,7 @@ let isGenerating = false; // Prevent double execution
 let cachedHistory = []; // Cache for history filtering
 let savedPrompts = JSON.parse(localStorage.getItem('savedPrompts') || '[]');
 let autoTranslateEnabled = localStorage.getItem('autoTranslate') !== 'false'; // Default ON
+let currentReferenceImage = null; // Stores upload reference image data
 
 // Load History on Init
 loadHistory();
